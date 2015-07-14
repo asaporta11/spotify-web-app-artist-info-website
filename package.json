@@ -1,0 +1,24 @@
+{
+    "name": "Spotify-Test-Application",
+    "version": "0.0.1",
+    "author": "Peter Lane",
+    "description": "Experimenting with Spotify API, Materialize CSS, jQuery Promises, jQuery Templates",
+    "bugs": "https://github.com/mendacitees/spotify-materialize/issues",
+    "homepage": "",
+    "docs": "https://github.com/mendacitees/spotify-materialize#readme",
+    "download": "https://github.com/mendacitees/spotify-materialize/archive/master.zip",    
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-clean": "^0.6.0",
+        "grunt-contrib-concat": "^0.5.0",
+        "grunt-contrib-copy": "^0.7.0",
+        "grunt-contrib-cssmin": "^0.10.0",
+        "grunt-contrib-jshint": "^0.10.0",
+        "grunt-contrib-sass": "^0.4.0",
+        "grunt-contrib-uglify": "^0.6.0",
+        "grunt-contrib-watch": "^0.6.1",
+        "grunt-contrib-less": "^0.12.0",
+        "grunt-sync": "^0.2.2",
+        "jshint-stylish": "^1.0.0"
+    }
+}

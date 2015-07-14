@@ -1,0 +1,15 @@
+{
+    "name": "Spotify-Test-Application",
+    "version": "0.0.1",
+    "author": "Peter Lane",
+    "description": "Experimenting with Spotify API, Materialize CSS, jQuery Promises, jQuery Templates",
+    "devDependencies": {
+        "jquery": "git@github.com:jquery/jquery.git#2.1.1",
+        "animatecss": "git@github.com:daneden/animate.css.git#3.2.0",
+        "twittertypeahead": "git@github.com:twitter/typeahead.js.git#0.10.5",
+        "jquerytemplate": "git@github.com:BorisMoore/jquery-tmpl.git",
+        "materialize": "git@github.com:Dogfalo/materialize.git#0.94.1",
+        "spotifyjsapi": "git@github.com:JMPerez/spotify-web-api-js.git#0.7.0",
+        "localstoragedb": "git@github.com:knadh/localStorageDB.git#2.3.0"
+    }
+}
