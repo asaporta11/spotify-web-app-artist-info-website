@@ -20,8 +20,9 @@
   $('#btnsearchartists').on('click', function(e) {
     var query = $('#txtArtistSearch').val();
     if (query.length > 2) {
-      $searchResults.html('');      
+      $searchResults.html('');   
       searchArtists(query);
+      //switched the order and the query worked for echo nest
     }
   });
 
@@ -55,9 +56,7 @@ searchArtists('Dave Matthews');
   function getArtistId(artistID) {
     console.log("getArtistId...");
     console.log(artistID);
-    return $.get(SEARCH_BASE_URL+'artists/'+artistID) //now have artist object 
-      // .pipe(trimResults)
-      // .pipe(renderRelatedTemplate)
+    return $.get(SEARCH_BASE_URL+'artists/'+artistID) //artist object 
       .pipe(top25Tracks);
   }
 
@@ -117,29 +116,67 @@ searchArtists('Dave Matthews');
       .pipe(renderRelatedTemplate);
   }
 
-  function getArtistBio(query){
+  // function getEchoNestId (query) {
+  //   console.log("getEchoNestId start...");
+  //   console.log(query);
+  //   var url = "http://developer.echonest.com/api/v4/artist/search?api_key="+api_key+"&id=spotify:artist:"+query+"&format=json&results=1&start=0&license=cc-by-sa";
+  //   console.log("echonest url...");
+  //   console.log(url);
+  //   console.log(url.response);
+  // }
+
+  function getArtistBio(query) {
     console.log("getArtistBio start");
+    var echoNestId;
+    var url;
+    console.log("query...");
     console.log(query);
-    var mgmtId = "ARI3Y821187FB3649C";
-    var url = "http://developer.echonest.com/api/v4/artist/biographies?api_key="+api_key+"&id="+mgmtId+"&format=json&results=1&start=0&license=cc-by-sa";
-    console.log("url...");
+    // var url = "http://developer.echonest.com/api/v4/artist/search?api_key="+api_key+"&id=spotify:artist:"+query+"&format=json&results=1&start=0&license=cc-by-sa";
+    var url = "http://developer.echonest.com/api/v4/artist/biographies?api_key="+api_key+"&id=spotify:artist:"+query;
+    console.log("echonest url...");
     console.log(url);
+    // getEchoNestId(query);
+
+    // var mgmtId = "ARI3Y821187FB3649C";
+    // var url = "http://developer.echonest.com/api/v4/artist/biographies?api_key="+api_key+"&id="+mgmtId+"&format=json&results=1&start=0&license=cc-by-sa";
+    // console.log("url...");
+    // console.log(url);
     var bData = {
       api_key: api_key,
-      id: mgmtId
+      id: query
     };
-    return $.get(url, console.log('successful get!'))
-      .pipe(renderBio); 
+
+    return $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'json',
+      success: function(response){
+        console.log('getArtistBio ajax call...')
+        console.log(response);
+      }
+    })
+      .pipe(renderBio)
+
+    // return $.ajax(url, console.log('successful get!'))
+      // .pipe(renderBio); 
   }
 
   function renderBio(relatedArtists) {
-  console.log('renderBio start');
-  console.log(relatedArtists);
-  var bioText = relatedArtists.response.biographies[0].text;
-  console.log(bioText);
-  var bioResult = ''; 
-  bioResult = '<li><a class="artistBio">'+bioText+'</a></li>';
-  $bioText.html(bioResult); 
+    console.log('renderBio start');
+    console.log(relatedArtists);
+    var bioText;
+    // var bioText = relatedArtists.response.biographies[2].text;
+    // console.log(relatedArtists.response.biographies[1].truncated);
+    for (var i=0; i<relatedArtists.response.biographies.length; i++){
+      if(relatedArtists.response.biographies[i].text.length > 100){
+        bioText = relatedArtists.response.biographies[i].text;
+        break;
+      }
+    }
+    console.log(bioText);
+    var bioResult = ''; 
+    bioResult = '<li><a class="artistBio">'+bioText+'</a></li>';
+    $bioText.html(bioResult); 
   } 
 
 
