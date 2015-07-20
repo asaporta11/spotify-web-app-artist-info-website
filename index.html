@@ -1,351 +1,186 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <title>Spotify Artist Discovery</title>
-  <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
-  <link href="css/animate.min.css" type="text/css" rel="stylesheet">
-  <link href="css/main.min.css" type="text/css" rel="stylesheet">
-  <style>
-.row33 {
-  border: 1px solid red;
-}
-.col33 {
-  border: 1px solid blue;
-}
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Spotify Web-App</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
 
-
-.valign-demo {
-  border: 1px solid blue;
-
-}
-
-
-.modal-header.brand-success {
-  background-color: #5cb85c;
-  color: #fff;
-  padding: 15px;
-}
-
-.modal-body {
-  position: relative;
-  padding: 15px;
-}
-
-
-.modal {
-  padding: 0;
-}
-
-.modal-title {
-  margin: 0;
-  line-height: 1.42857143;
-}
-
-.modal-footer {
-  margin-top: 15px;
-  padding: 14px 15px 15px;
-  text-align: right;
-  border-top: 1px solid #e5e5e5;
-}
-
-.card-panel {
-  padding: 0;
-}
-
-.card-panel-title {
-  margin: 0;
-  line-height: 1.42857143;
-}
-
-.card-panel-footer {
-  margin-top: 5px;
-  padding: 14px 15px 15px;
-  text-align: right;
-}
-.card-panel-header {
-  background-color: rgba(0,0,0,.9) !important;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  color: #fff;
-  padding: 5px;
-  margin-bottom: 10px;
-}
-
-.card-panel-body {
-  position: relative;
-  padding: 20px;
-}
-
-
-.card-panel-title i.mdi-action-search {
-  color: #84bd00;
-  margin-right: 30px;
-}
-
-.mdi-navigation-expand-more {
-  color: #84bd00;
-  font-size: 40px;
-}
-
-
-.hidden {
-  display: none;
-}
-
-.card .card-image {
-  height: 175px;
-}
-
-</style>
-
-</head>
-<body>
-
-<!-- Ajax Modal -->
-
-<div id="ajaxmodal" class="modal">
-  <div class="modal-header brand-success">
-      <h4 class="modal-title">Log Of Ajax Calls</h4>
-  </div>
-  <div class="modal-body">
-    <p id="ajaxlog"></p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary waves-effect modal-close">Close</button>
-  </div>
-</div>
-
-
-
-
-  <nav class="spotifynav" role="navigation">
-    <div class="container">
-      <div class="nav-wrapper"><img height="40" style="margin-top: 10px; margin-right: 10px;" src="images/logo-navbar.png"><a id="logo-container" href="#" class="brand-logo">Artist Discovery</a>
-        <ul id="nav-mobile" class="right side-nav">
-          <li><a href="#">Navbar Link</a></li>
-          <li><a class="waves-effect waves-light modal-trigger" href="#ajaxmodal">Ajax Log</a></li>
-          <li><a class="waves-effect waves-light modal-trigger" id="spotifylogin" href="#">Login</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-      </div>
-    </div>
-  </nav>
-
-
-
-
-<div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-    
-       <div class="row row-no-bottom-margin center hidden" id="hiddenrow">
-          <div class="col s12">
-            <a class="waves-effect waves-light btn-large" id="searchagainbutton"><i class="mdi-action-search left"></i>Search Again</a>
-         </div>
-      </div>
-
-
-       <div class="row row-no-bottom-margin">
-        <div class="col s8 offset-s2">
-          <div class="card-panel" id="searchcard"><!--start card-->
-            <div class="card-panel-header">
-                <h4 class="card-panel-title"><i class="mdi-action-search"></i> Search For An Artist</h4>
-            </div>
-             <div class="card-panel-body">
-               <div class="row row-no-bottom-margin" style="border: 0px solid red;">
-                <div class="col s9">
-                  <div class="input-field">
-                    <i class="mdi-av-my-library-music prefix"></i>
-                    <input id="txtArtistSearch" type="text">
-                    <label for="txtArtistSearch">Enter An Artist's Name</label>
-                  </div>
+        <main>
+            
+                
+            <header class="nav-wrapper">
+                <div class="container">
+                <a href="#!" class="brand-logo"><img src="images/logo.svg"></a>
                 </div>
-                <div class="col s3" style="margin-top: 5px;">
-                  <button type="button" class="btn btn-primary waves-effect modal-close" id="btnsearchartists">Search</button>
-                 </div>
-              </div>
-              <div class="row row-no-bottom-margin" style="border: 0px solid red;">
-                <div class="col s12">
-                   <ul id="searchresults"></ul>
+                
+            </header>
+
+            <div id="content"class="container">
+                <div class="row">
+                    <form class="valign-wrapper col s12">
+                        <div class="input-field col s12 m6 l4">
+                          <input id="txtArtistSearch" type="text" class="validate">
+                          <label for="txtArtistSearch">Artist Name</label>
+                        </div>
+                    </form>
                 </div>
-              </div>
+
+                <!-- parallax images of artist in bg -->
+                <div class="background-group">
+                    <ul class="first-group-img">
+                        <li>
+                            <img id="back-animate"class="one" src="images/background-red.png" alt="">
+                        </li>
+                        <li>
+                            <img class="two" src="images/taylor_swift.png" alt="">
+                        </li>
+                        <li>
+                            <img id="front-animate" class="three"src="images/foreground-red.png" alt="">
+                        </li>
+                    </ul>
+                </div>
+            
+
             </div>
-          </div><!--end card-->
+
+            <!-- Below is the content for artist intro -->
+
+            <section class="container artist-intro">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card">
+                            
+                            <div class="parallax-container">
+                                <div class="parallax"><img class=" card-image"src="images/kanye-west1.jpg"></div>
+                            </div>
+                            <div class="card-content white">
+                                <h1 class="card-title activator blue-grey-text text-darken-4">Kanye West</h1>
+                                <p class="grey-text truncate text-darken-4">is an American rapper, songwriter, record producer and fashion designer. West first became known as a producer for Roc-A-Fella Records; he achieved recognition for his work on rapper Jay-Z's The Blueprint (2001), as well as hit single for musical artists including Alicia Keys, Ludacris, and Janet Jackson. His style of production originally used high-pitched vocal samples from soul songs incorporated with his own drums and instruments. He later broadened his influences to include 1970s R&amp;B, baroque pop, trip hop, arena rock, house, folk, alternative, electronica, synthpop, industrial, and classical music.</p>
+                                <a class="white-text blue-grey waves-effect waves-light btn">Read More</a>
+                            </div>
+                            <div class="card-reveal blue-grey darken-4">
+                                <span class="card-title">Kanye West<i class="material-icons right">close</i></span>
+                                <p>is an American rapper, songwriter, record producer and fashion designer. West first became known as a producer for Roc-A-Fella Records; he achieved recognition for his work on rapper Jay-Z's The Blueprint (2001), as well as hit single ... for musical artists including Alicia Keys, Ludacris, and Janet Jackson. His style of production originally used high-pitched vocal samples from soul songs incorporated with his own drums and instruments. He later broadened his influences to include 1970s R&amp;B, baroque pop, trip hop, arena rock, house, folk, alternative, electronica, synthpop, industrial, and classical music.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                        
+            <!-- Below is the top songs list -->
+
+            <section class="container songs">
+                <div class="card  z-depth-5 blue-grey darken-4">
+                    <div class="card-content">
+                    <h2 class="card-title">Top Songs</h2>
+                        <table class="hoverable">
+                            <thead>
+                                <tr>
+                                    <th data-field="numbers"></th>
+                                    <th data-field="id">Songs</th>
+                                    <th data-field="name"><i class="tiny material-icons">query_builder</i></th>
+                                    <th data-field="price">Item Price</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Alvin</td>
+                                    <td>Eclair</td>
+                                    <td>$0.87</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Alan</td>
+                                    <td>Jellybean</td>
+                                    <td>$3.76</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Jonathan</td>
+                                    <td>Lollipop</td>
+                                    <td>$7.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <a class="white-text blue-grey waves-effect waves-light btn">More Songs</a>
+                    </div>
+                </div>
+                
+            </section>
+
+            
+            <!-- Below is the Video Interviews -->
+            
+            <section class="container interviews">
+                
+                    <div class="card white">
+                        <div class="card-content">
+                            <h2 class="card-title blue-grey-text text-darken-4">Artist Interviews</h2>
+                            <div class="row">
+                                    <div class="col s12 m4 l4">
+                                        <div class="video-container no-controls">
+                                            <iframe class="materialboxed" width="853" height="480" src="img/video-placeholder.png" frameborder="0" allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 m4 l4">
+                                        <div class="video-container no-controls">
+                                            <iframe class="materialboxed" width="853" height="480" src="img/video-placeholder.png" frameborder="0" allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 m4 l4">
+                                        <div class="video-container no-controls">
+                                            <iframe class="materialboxed" width="853" height="480" src="img/video-placeholder.png" frameborder="0" allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+            </section>
 
 
-        </div>
-      </div>
-
-  
-      <div id="spotifyresults">
-      <!--template data populated from API call will be inserted here-->
-      </div>
-
-    </div>
-  <!-- tracks test -->  
-  <div class="col m2">
-    <ul id="top25Tracks">
-    </ul>
-  </div>
-    <!-- bio text test -->  
-  <div class="col m2">
-    <ul id="bioText">
-    </ul>
-  </div>
-</div>
+            <!-- Below is the Album collection -->
+            <section class="container album">
+                <div class="card">
+                    <div class="row">
+                        <div class="col s12 m12 l12 album-group valign-wrapper">
+                            <img src="img/kanye-album.jpg" alt="">
+                            <img src="img/kanye-album.jpg" alt="">
+                            <img src="img/kanye-album.jpg" alt="">
+                            <img src="img/kanye-album.jpg" alt="">
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+        
+        </main>
 
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/materialize.min.js"></script>
+        <script src="js/main.js"></script>
+        
 
-
-
-
-
-<script id="relatedartisttemplate" type="text/x-jquery-tmpl">
-  <div class="col m2">
-    <div class="card small animated bounceInDown">
-      <div class="card-image">
-       <img src="${images[1].url}">
-      </div>
-      <div class="card-content">
-        <span class="card-title grey-text text-darken-4">${name}</span>
-      </div>
-    </div>
-  </div>
-</script>
-
-  <script id="selectedartisttemplate" type="text/x-jquery-tmpl">
-     <div class="row row-no-bottom-margin" style="margin-bottom: 0; padding-bottom: 0;">
-        <div class="col s4">&nbsp;</div>
-        <div class="col s4">
-          <div class="card animated bounceInDown">
-              <div class="card-image waves-effect waves-block waves-light"><img src="${images[0].url}"></div>
-              <div class="card-content"><span class="card-title activator grey-text text-darken-4">${name} <i class="mdi-action-info right"></i></span></div>
-              <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">${name} <i class="mdi-navigation-close right"></i></span>
-                <p>ID: ${id}</p>
-                <p>Popularity: ${popularity}</p>
-                <p><a href="${href}" target="_blank">Spotify Link</a></p>
-              </div>
-          </div>
-       </div>
-        <div class="col s4">&nbsp;</div>
-      </div>
-      <div class="animated fadeIn">
-        <div class="row row-no-bottom-margin">
-          <div class="col s6 offset-s6 border-left" style="height: 50px;"></div>
-        </div>
-        <div class="row row-no-bottom-margin">
-          <div class="col s1 border-right"></div>
-          <div class="col s1 border-top"></div>
-          <div class="col s1 border-top border-right"></div>
-          <div class="col s1 border-top"></div>
-          <div class="col s1 border-top border-right"></div>
-          <div class="col s1 border-top"></div>
-          <div class="col s1 border-top border-right"></div>
-          <div class="col s1 border-top"></div>
-          <div class="col s1 border-top border-right"></div>
-          <div class="col s1 border-top"></div>
-          <div class="col s1 border-top border-right"></div>
-          <div class="col s1"></div>
-        </div>
-      </div>
-       <div class="row" id="relatedartists">
-
-
-      </div>
-      <!--
-      <div class="row row-no-bottom-margin">
-        <div class="col s1 border-right"></div>
-        <div class="col s1"></div>
-        <div class="col s1 border-right"></div>
-        <div class="col s1"></div>
-        <div class="col s1 border-right"></div>
-        <div class="col s1"></div>
-        <div class="col s1 border-right"></div>
-        <div class="col s1"></div>
-        <div class="col s1 border-right"></div>
-        <div class="col s1"></div>
-        <div class="col s1 border-right"></div>
-        <div class="col s1"></div>
-      </div>
-      -->
-      <div class="row" id="subrelated">
-        <div class="col s2" id="subrelated-0"></div>
-        <div class="col s2" id="subrelated-1"></div>
-        <div class="col s2" id="subrelated-2"></div>
-        <div class="col s2" id="subrelated-3"></div>
-        <div class="col s2" id="subrelated-4"></div>
-        <div class="col s2" id="subrelated-5"></div>
-      </div>
-  </script>
-
-
-
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-  <footer class="spotify-green">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">Company Bio</h5>
-          <p class="grey-text text-lighten-4">asdf</p>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Settings</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Connect</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="footer-copyright-spotify">
-      <div class="container">
-      &nbsp;
-      </div>
-    </div>
-  </footer>
-
-  <!--  Scripts-->
-  <script src="js/jquery.min.js"></script>
-  <script src="js/jquery.tmpl.min.js"></script>
-  <script src="js/typeahead.bundle.min.js"></script>
-  <script src="js/materialize.min.js"></script>
-  <script src="js/spotify-web-api.js"></script>
-  <script src="js/localstoragedb.min.js"></script>
-  <script src="js/spotifykeys.js"></script>
-  <script src="js/main.js"></script>
-
-  <script>
-
-    var expiresIn = 3600;
-    var retrieved = new Date();
-  
-
-    var expires = new Date();
-    expires.setSeconds(expires.getSeconds() + expiresIn); 
-  
-
-    
-    
-    console.log('retrieved: ', retrieved);
-    console.log('expires: ', expires);
-  </script>
-
-  </body>
+    </body>
 </html>
