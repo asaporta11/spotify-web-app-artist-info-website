@@ -180,3 +180,10 @@ searchArtists('Dave Matthews');
   } 
 
 
+
+// Below is the parallax img (abe)
+  $(document).ready(function(){
+      $('.parallax').parallax();
+      // revealing the background images
+      $('.background-group').addClass('reveal');
+    });
