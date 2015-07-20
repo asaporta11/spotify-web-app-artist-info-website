@@ -26,6 +26,8 @@
     }
   });
 
+  
+
 
   $('body').on('click', '.artist', function(e) {
     e.preventDefault();
