@@ -1,4 +1,4 @@
-  
+
   var SEARCH_BASE_URL = 'https://api.spotify.com/v1/';
   var TRACKS_BASE_URL = 'https://api.spotify.com/v1/artists/{id}/top-tracks';
   var YOUTUBE_SEARCH_BASE_URL = 'https://www.googleapis.com/youtube/v3/search?part=';
@@ -27,15 +27,19 @@
   
   $('.modal-trigger').leanModal();
   
-  $('#btnsearchartists').on('click', function(e) {
-    var query = $('#txtArtistSearch').val();
-    if (query.length > 2) {
-      $searchResults.html('');   
-      searchArtists(query);
-      getYoutubeSearch(query);
-      //switched the order and the query worked for echo nest
+  $('#txtArtistSearch').keypress('click',function(e){
+    if( e.which == 13 ){
+        e.preventDefault();
+        var query = $('#txtArtistSearch').val();
+        if( query.length > 2 ){
+          // searchArtists(query);
+          $searchResults.html('');   
+          searchArtists(query);
+          getYoutubeSearch(query);
+        }
     }
   });
+
 
   $('body').on('click', '.artist', function(e) {
     e.preventDefault();
@@ -272,15 +276,15 @@ searchArtists('Dave Matthews');
 
 // Below is the Keypress function to search artist 
 
-  $(document).keypress(function(e){
-    if( e.which == 13 ){
-        e.preventDefault();
-        var query = $('#txtArtistSearch').val();
-        if( query.length > 2 ){
-          searchArtists(query);
-        }
-    }
-  });
+  // $(document).keypress(function(e){
+  //   if( e.which == 13 ){
+  //       e.preventDefault();
+  //       var query = $('#txtArtistSearch').val();
+  //       if( query.length > 2 ){
+  //         searchArtists(query);
+  //       }
+  //   }
+  // });
 
 //   function searchArtists(query) {
 //       var oData = {
