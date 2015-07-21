@@ -235,9 +235,81 @@ searchArtists('Dave Matthews');
   // }
 
 
-// Below is the parallax img (abe)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ========== MY STUFF ABE ======================================================================
+
+
+
+// Below is the parallax function for img card 
   $(document).ready(function(){
       $('.parallax').parallax();
       // revealing the background images
       $('.background-group').addClass('reveal');
     });
+
+
+// Below is the Keypress function to search artist 
+
+  $(document).keypress(function(e){
+    if( e.which == 13 ){
+        e.preventDefault();
+        var query = $('#txtArtistSearch').val();
+        if( query.length > 2 ){
+          searchArtists(query);
+        }
+    }
+  });
+
+//   function searchArtists(query) {
+//       var oData = {
+//       q: query,
+//       type: 'artist',
+//       limit: SEARCH_LIMIT,
+//       offset: 0,
+//       market: 'US'
+//       };
+      
+//       var url = SEARCH_BASE_URL + 'search';
+
+//       return $.get(url, oData)
+//       .pipe(renderSearchResults);
+
+//   }
+
+  
+//   function renderSearchResults(response) {
+//       searchResultData = response;
+//       var artists = response.artists.items;
+//       var result = '';
+//       for (var i = 0; i < artists.length; i++) {
+//       var artistName = artists[i].name;
+//       var artistID = artists[i].id;
+//       result += '<li><a class="artist" data-selected-index="'+i+'" data-artist-name="'+artistName+'" href="'+artistID+'">'+artistName+'</a></li>';
+//     }
+
+//     $searchResults.html(result);
+//   }
+  
+
+
+// // https://api.spotify.com/v1/search?q=Muse&type=track,artist&market=US
