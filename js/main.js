@@ -17,45 +17,7 @@
   var $videoDisplay = $('#videoDisplay');
   var videoID;
 
-//untouched from when working well 
- // $('.modal-trigger').leanModal();
   
- //  $('#txtArtistSearch').keypress('click',function(e){
- //    if( e.which == 13 ){
- //        e.preventDefault();
- //        var query = $('#txtArtistSearch').val();
- //        if( query.length > 2 ){
- //          // searchArtists(query);
- //          $searchResults.html('');   
- //          searchArtists(query);
- //          getYoutubeSearch(query);
- //        }
- //    }
- //  });
-
-
- //  $('body').on('click', '.artist', function(e) {
- //    e.preventDefault();
- //    selectedIndex = $(this).attr('data-selected-index');
- //    selectedID = $(this).attr('href');
- //    console.log("searchResultData "+searchResultData.artists);
- //    selectedArtistData = searchResultData.artists.items[selectedIndex];
- //    var $renderedTemplate = $selectedArtistTemplate.tmpl(selectedArtistData);
- //    $spotifyResults.html($renderedTemplate);
- //    top25Tracks(selectedID);
- //    getArtistBio(selectedID);
-
- //    $('#searchcard').addClass('hidden');
- //    $('#hiddenrow').removeClass('hidden').addClass('animated bounceInDown');
- //  });
-  
-  
- //  $('body').on('click', '#searchagainbutton', function(e) {
- //    $('#searchcard').removeClass('hidden').addClass('animated bounceInDown');
- //    $('#hiddenrow').removeClass('animated bounceInDown').addClass('hidden'); 
- //  });
-  
-
   var query;
   $('#txtArtistSearch').keypress('click',function(e){
     if( e.which == 13 ){
@@ -66,8 +28,6 @@
           searchArtists(query);
           getYoutubeSearch(query);
         }
-
-
     }
   });
 
@@ -113,24 +73,20 @@
 
         //artist name
         var artistName = artists[0].name;
-        console.log('artists[0].name ', artists[0].name);
         document.getElementById('artist-name').innerHTML=artistName;
 
         var artistID = artists[0].id;
-        console.log('artistID', artistID);
       
         //artist pic
         var artistPic = artists[0].images[0].url;
         console.log('artistPic', artistPic);
         var picDiv = document.getElementById('artist-picture');
         var imgTag = document.createElement('img');
-        imgTag.setAttribute('href', artistPic);
-        imgTag.setAttribute('height', '100%');
-        imgTag.setAttribute('width', '100%');
+        imgTag.setAttribute('src', artistPic);
+        imgTag.setAttribute('height', 'auto');
+        imgTag.setAttribute('width', '50%');
         console.log('imgTag', imgTag);
         picDiv.appendChild(imgTag);
-
-
 
         top25Tracks(artistID);
         getArtistBio(artistID);
@@ -215,7 +171,7 @@
   } 
 
   function getYoutubeSearch (query){
-    var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+query+'%20interview%20musician&key='+youtube_api_key;
+    var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+query+'%20%20interview&key='+youtube_api_key;
     //add a bit of code that limits search results to 3 or 5
     return $.ajax({
       url: url,
@@ -269,6 +225,9 @@
     player.stopVideo();
   }
 
+
+//Autocomplete for suggested artists 
+// http://developer.echonest.com/docs/v4/artist.html#suggest-beta
 
 
 // ========== Abe's Stuff ======================================================================
