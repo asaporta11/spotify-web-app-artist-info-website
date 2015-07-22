@@ -1,9 +1,10 @@
-
-  var SEARCH_BASE_URL = 'https://api.spotify.com/v1/';
+var SEARCH_BASE_URL = 'https://api.spotify.com/v1/';
   var TRACKS_BASE_URL = 'https://api.spotify.com/v1/artists/{id}/top-tracks';
   var YOUTUBE_SEARCH_BASE_URL = 'https://www.googleapis.com/youtube/v3/search?part=';
   var SEARCH_LIMIT = 5;
   var RELATED_LIMIT = 6;
+  // var selectedID = '';
+  // var selectedArtistData = {};
   var api_key = "WJR9NGGDMNXGWXXAW";
   var youtube_api_key = "AIzaSyDJ2uOGMzzshx3VCZQ3bxI0wz-E4STB3bU";
   var $ajaxlog = $('#ajaxlog');  
@@ -27,26 +28,39 @@
   
   $('.modal-trigger').leanModal();
   
-  $('#txtArtistSearch').keypress('click',function(e){
-    if( e.which == 13 ){
-        e.preventDefault();
-        var query = $('#txtArtistSearch').val();
-        if( query.length > 2 ){
-          // searchArtists(query);
-          $searchResults.html('');   
-          searchArtists(query);
-          getYoutubeSearch(query);
-        }
-    }
-  });
+  // $('#txtArtistSearch').keypress('click',function(e){
+  //   if( e.which == 13 ){
+  //       e.preventDefault();
+  //       var query = $('#txtArtistSearch').val();
+  //       if( query.length > 2 ){
+  //         // searchArtists(query); //doesn't work when uncommented
+  //         $searchResults.html('');   
+  //         searchArtists(query);
+  //         getYoutubeSearch(query);
+  //         selectedID = $('#searchresults li:first-child a').attr('href');
+  //         console.log("selectedID", selectedID);
+  //       }
+
+  //   // selectedID = $('.artist').attr('href');
+  
+  //      // selectedID = $(this).attr('href');
+  //   console.log("selectedID: " + selectedID);
+  //   // console.log("searchResultData "+searchResultData.artists);
+  //   selectedArtistData = searchResultData.artists.items[0];
+  //   var $renderedTemplate = $selectedArtistTemplate.tmpl(selectedArtistData);
+  //   $spotifyResults.html($renderedTemplate);
+  //   top25Tracks(selectedID);
+  //   getArtistBio(selectedID);
+  //   }
+  // });
 
 
   $('body').on('click', '.artist', function(e) {
     e.preventDefault();
     selectedIndex = $(this).attr('data-selected-index');
     selectedID = $(this).attr('href');
-    console.log("searchResultData "+searchResultData.artists);
-    selectedArtistData = searchResultData.artists.items[selectedIndex];
+    // console.log("searchResultData "+searchResultData.artists);
+    selectedArtistData = searchResultData.artists.items[0];
     var $renderedTemplate = $selectedArtistTemplate.tmpl(selectedArtistData);
     $spotifyResults.html($renderedTemplate);
     top25Tracks(selectedID);
@@ -180,26 +194,45 @@ searchArtists('Dave Matthews');
   function onYouTubeIframeAPIReady(response) {
     console.log('onYouTubeIframeAPIReady entered...');
 
-    for(i=0; i<3; i++){
-      console.log('for loop entered...');
-      videoID = response.items[i].id.videoId;
-      console.log("videoID", videoID);
+    videoID = response.items[0].id.videoId;
+    console.log("videoID", videoID);
 
-      var videoTitle = response.items[0].snippet.title;
-      console.log("videoTitle", videoTitle);
+    var videoTitle = response.items[0].snippet.title;
+    console.log("videoTitle", videoTitle);
 
-      var ifrm = document.createElement('iframe');
-      ifrm.setAttribute('id', 'player'+i);
-      document.getElementById('player-container').appendChild(ifrm);
+    var ifrm = document.createElement('iframe');
+    ifrm.setAttribute('id', 'player');
+    document.getElementById('player-container').appendChild(ifrm);
 
-      console.log('ifrm: ', ifrm);
-      var youtubeEmbedBase = "http://www.youtube.com/embed/";
+    console.log('ifrm: ', ifrm);
+    var youtubeEmbedBase = "http://www.youtube.com/embed/";
 
     var srcLink = youtubeEmbedBase+videoID;
+
+    player = {
+      src: function() { 
+          console.log('in player object src'); 
+          srcLink = youtubeEmbedBase+videoID;
+          console.log('srcLink inside src', srcLink);
+          document.getElementById('player')
+            .setAttribute('src', srcLink);
+          // return this;
+      },
+      width: '33%',
+      height: '33%',
+      videoId: videoID,
+      events: {
+        'onReady': onPlayerReady,
+        // 'onPlaybackQualityChange': onPlayerPlaybackQualityChange,
+        'onStateChange': onPlayerStateChange,
+        'onError': onPlayerError
+      }
+    };
     ifrm.setAttribute('src', srcLink);
-    ifrm.setAttribute('width', '33%');
-    ifrm.setAttribute('height', '200px');
-    }
+    ifrm.setAttribute('width', player.width);
+    ifrm.setAttribute('width', player.height);
+    // console.log('srcLink', srcLink);
+
   }
 
   function onPlayerReady(event) {
@@ -223,51 +256,7 @@ searchArtists('Dave Matthews');
 
 
 
-  // function onYouTubeIframeAPIReady(response) {
-  //   console.log('onYouTubeIframeAPIReady entered...');
 
-  //   for(i=0; i<3; i++){
-  //     console.log('for loop entered...');
-      
-  //   }
-
-  //   videoID = response.items[0].id.videoId;
-  //   console.log("videoID", videoID);
-
-  //   var videoTitle = response.items[0].snippet.title;
-  //   console.log("videoTitle", videoTitle);
-
-  //   var ifrm = document.createElement('iframe');
-  //   ifrm.setAttribute('id', 'player');
-  //   document.getElementById('player-container').appendChild(ifrm);
-
-  //   console.log('ifrm: ', ifrm);
-  //   var youtubeEmbedBase = "http://www.youtube.com/embed/";
-
-  //   var srcLink = youtubeEmbedBase+videoID;
-  //   ifrm.setAttribute('src', srcLink);
-  //   ifrm.setAttribute('width', player.width);
-  //   ifrm.setAttribute('height', player.height);
-
-  // }
-
-  // function onPlayerReady(event) {
-  //   event.target.setVolume(100);
-  //   event.target.playVideo();
-  // }
-  // var done = false;
-  // function onPlayerStateChange(event) {
-  //   if (event.data == YT.PlayerState.PLAYING && !done) {
-  //     setTimeout(stopVideo, 6000);
-  //     done = true;
-  //   }
-  // }
-  // function onPlayerError() {
-  //   console.log('player error');
-  // }
-  // function stopVideo() {
-  //   player.stopVideo();
-  // }
 
 
 
