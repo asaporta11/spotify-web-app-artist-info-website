@@ -68,16 +68,16 @@
   
 
   function searchArtists(query) {
-    console.log('search artists entered...');
-    console.log('query in search artists: ', query);
+    // console.log('search artists entered...');
+    // console.log('query in search artists: ', query);
     var url = 'https://api.spotify.com/v1/search?q='+query+'&type=artist&market=US';
     return $.ajax({
       url: url,
       type: 'GET',
       dataType: 'json',
       success: function(data){
-        console.log('search artists success!');
-        console.log(data);
+        // console.log('search artists success!');
+        // console.log(data);
         var artists = data.artists.items; //object of top 10 artists related to query name
 
         //artist name
@@ -88,7 +88,7 @@
       
         //artist pic
         var artistPic = artists[0].images[0].url;
-        console.log('artistPic', artistPic);
+        // console.log('artistPic', artistPic);
         var picDiv = $('#artist-picture-test');
         picDiv.attr('src', artistPic);
         picDiv.attr('height', 'auto');
@@ -103,8 +103,8 @@
   }
   
   function renderSearchResults(response) {
-    console.log('render search results entered');
-    console.log('response:', response);
+    // console.log('render search results entered');
+    // console.log('response:', response);
     searchResultData = response;
     var artists = response.artists.items;
     var result = '';
@@ -137,8 +137,8 @@
         var durationSecs = Math.round(durationMs/1000);
         var durationMins = Math.floor(durationSecs/60); 
         formatDurationMins = durationMins + ":" + durationSecs%60;
-        console.log('formatDurationMins...', formatDurationMins);
-        if(formatDurationMins.length == 3){ //if song is 
+        // console.log('formatDurationMins...', formatDurationMins);
+        if(formatDurationMins.length == 3){ //if song is 3:06 then puts an 0 before the 6
           formatDurationMins = durationMins + ":0" + durationSecs%60;
         }
         return formatDurationMins;
@@ -168,6 +168,7 @@
   }
 
   function getArtistBio(query) {
+    console.log('getArtistBio entered...');
     // console.log("query: "+query);
     // var echoNestId;
     var url;
@@ -182,26 +183,30 @@
       dataType: 'json',
       success: function(response){
         console.log('get artist bio success entered....', url);
+        console.log('response...', response);
       }, 
       error: function(response){
-        console.log('');
+        console.log('get artist bio ERROR...');
       }
-      //last here
     })
       .pipe(renderBio)
   }
 
   function renderBio(relatedArtists) {
+    console.log('renderBio entered...');
     var bioText;
+    var bioResult = ''; 
     for (var i=0; i<relatedArtists.response.biographies.length; i++){
       if(relatedArtists.response.biographies[i].text.length > 100){
-        console.log('in render bio if function...');
         bioText = relatedArtists.response.biographies[i].text;
+        bioResult = '<p class="artistBio">'+bioText+'</p>';
         break;
+      }else{
+        console.log('else statement entered!');
+        bioResult = "<p>Oops - it looks like we don't have a bio for this artist! If you'd like to write one, please visit <a href=www.wikipedia.com>our friends at wikipedia</a></p>";
+        // $bioText.html(bioResult); 
       }
     }
-    var bioResult = ''; 
-    bioResult = '<li><a class="artistBio">'+bioText+'</a></li>';
     $bioText.html(bioResult); 
   } 
 
@@ -233,8 +238,8 @@
 
       var srcLink = youtubeEmbedBase+videoID;
       ifrm.setAttribute('src', srcLink);
-      ifrm.setAttribute('width', '33%');
-      ifrm.setAttribute('height', '200px');
+      // ifrm.setAttribute('width', '33%');
+      // ifrm.setAttribute('height', '200px');
     }
   }
 
@@ -261,7 +266,7 @@
 // http://developer.echonest.com/docs/v4/artist.html#suggest-beta
 
 function autocomplete(query){
-  console.log('autocomplete query ', query);
+  // console.log('autocomplete query ', query);
   var totalAutocompleteArray = [];
   var autocompleteArray = [];
   var url = "http://developer.echonest.com/api/v4/artist/suggest?api_key="+api_key+"&name="+query+"&results=5";
