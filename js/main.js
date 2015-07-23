@@ -146,7 +146,7 @@
 
       msToMin(durationMs);
 
-      tracksResult += '<tr><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+formatDurationMins+'">'+formatDurationMins+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+previewUrl+'">'+previewUrl+'</a></td></tr>';
+      tracksResult += '<tr><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+formatDurationMins+'">'+formatDurationMins+'</a></td><td><a class="artist" data-selected-index="'+i+'" href="'+previewUrl+'"><i class="material-icons">play_arrow</i></a></td></tr>';
     }
     $top25Tracks.html(tracksResult); 
   } 
