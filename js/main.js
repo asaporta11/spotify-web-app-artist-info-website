@@ -16,6 +16,10 @@
   var $bioText = $('#bioText');
   var $videoDisplay = $('#videoDisplay');
   var videoID;
+  var durationMs;
+  var previewUrl;
+  var durationMsResult;
+  var previewUrlResult;
 
   
   var query;
@@ -27,6 +31,7 @@
 
           searchArtists(query);
           getYoutubeSearch(query);
+          autocomplete(query);
         }
     }
   });
@@ -80,13 +85,21 @@
         //artist pic
         var artistPic = artists[0].images[0].url;
         console.log('artistPic', artistPic);
-        var picDiv = document.getElementById('artist-picture');
-        var imgTag = document.createElement('img');
-        imgTag.setAttribute('src', artistPic);
-        imgTag.setAttribute('height', 'auto');
-        imgTag.setAttribute('width', '50%');
-        console.log('imgTag', imgTag);
-        picDiv.appendChild(imgTag);
+        var picDiv = $('#artist-picture-test');
+        picDiv.attr('src', artistPic);
+        picDiv.attr('height', 'auto');
+        picDiv.attr('width', '50%');
+
+           //artist pic works well 
+        // var artistPic = artists[0].images[0].url;
+        // console.log('artistPic', artistPic);
+        // var picDiv = document.getElementById('artist-picture');
+        // var imgTag = document.createElement('img');
+        // imgTag.setAttribute('src', artistPic);
+        // imgTag.setAttribute('height', 'auto');
+        // imgTag.setAttribute('width', '50%');
+        // console.log('imgTag', imgTag);
+        // picDiv.appendChild(imgTag);
 
         top25Tracks(artistID);
         getArtistBio(artistID);
@@ -118,10 +131,14 @@
 
   function renderRelatedTemplate(relatedArtists) {
     var tracks = relatedArtists.tracks;
+    console.log('relatedArtists', relatedArtists);
     var tracksResult = ''; 
     for (var i = 0; i < tracks.length; i++){
       var trackName = tracks[i].name; 
-      tracksResult += '<li><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></li>';
+      var durationMs = tracks[i].duration_ms;
+      var previewUrl = tracks[i].preview_url;
+
+      tracksResult += '<td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+durationMs+'">'+durationMs+'</a></td><td><a class="artist" data-selected-index="'+i+'" href="'+previewUrl+'">'+previewUrl+'</a></td>';
     }
     $top25Tracks.html(tracksResult); 
   } 
@@ -133,6 +150,10 @@
       type: 'GET',
       dataType: 'json',
       success: function(data){
+        console.log('top 10 tracks success function entered!');
+        console.log('top10tracks data ', data);
+        // durationMs = data.durationMs[i].duration_ms
+        // previewUrl = data
       }
     })
       .pipe(renderRelatedTemplate);
@@ -185,19 +206,15 @@
   }
 
   function onYouTubeIframeAPIReady(response) {
-    // console.log('onYouTubeIframeAPIReady entered...');
-
     for(i=0; i<3; i++){
       videoID = response.items[i].id.videoId;
 
       var videoTitle = response.items[0].snippet.title;
-      // console.log("videoTitle", videoTitle);
 
       var ifrm = document.createElement('iframe');
       ifrm.setAttribute('id', 'player'+i);
       document.getElementById('player-container').appendChild(ifrm);
 
-      // console.log('ifrm: ', ifrm);
       var youtubeEmbedBase = "http://www.youtube.com/embed/";
 
     var srcLink = youtubeEmbedBase+videoID;
@@ -229,6 +246,26 @@
 //Autocomplete for suggested artists 
 // http://developer.echonest.com/docs/v4/artist.html#suggest-beta
 
+function autocomplete(query){
+  console.log('autocomplete query ', query);
+  var totalAutocompleteArray = [];
+  var autocompleteArray = [];
+  var url = "http://developer.echonest.com/api/v4/artist/suggest?api_key="+api_key+"&name="+query+"&results=5";
+  $.ajax({
+    url: url,
+    dataType: 'json',
+    success: function(response){
+      for(i=0; i<response.response.artists.length; i++){
+        var autocompleteList = response.response.artists[i].name;
+        totalAutocompleteArray = autocompleteArray.push(autocompleteList);
+      }
+    }
+  });
+  //from jQuery UI autocomplete
+  $( "#txtArtistSearch" ).autocomplete({
+    source: totalAutocompleteArray
+  });
+}
 
 // ========== Abe's Stuff ======================================================================
 
