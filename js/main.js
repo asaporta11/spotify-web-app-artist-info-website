@@ -300,6 +300,8 @@ function autocomplete(query){
 //   });
 // });
 
-// $( "#readmore-btn" ).click(function() {
-//   $( this ).toggleClass( "highlight" );
-// });
+var toggleHeight = ".container .card .card-content .btn-toggle"
+
+$( "#readmore-btn" ).click(function() {
+  $( ".card .card-content p" ).toggleClass( toggleHeight );
+});
