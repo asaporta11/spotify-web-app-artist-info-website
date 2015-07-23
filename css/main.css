@@ -274,6 +274,7 @@ form {
 
 .card .card-content {
     padding: 15px 40px;
+    height: 100%;
 }
 
 .card .card-content p {
@@ -321,7 +322,7 @@ tr:hover > td, tr{
 }
 
 .height{
-  height: 70%;
+  height: 80%;
   transition: height 1s ease;
 }
 

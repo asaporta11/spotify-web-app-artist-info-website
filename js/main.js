@@ -292,3 +292,18 @@ function autocomplete(query){
       $('.background-group').addClass('reveal');
     });
 
+  // $("#readmore-btn").click(function(){
+  //   $('.card .card-content p').animate(function(){
+  //     $(this).height('150px');
+
+  //   });
+  // });
+
+
+  $( "#readmore-btn" ).click(function() {
+  $( ".card .card-content p" ).animate({
+    height: "toggle"
+  }, 800, function() {
+    // Animation complete.
+  });
+});
