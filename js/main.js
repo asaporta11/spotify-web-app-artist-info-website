@@ -25,14 +25,18 @@
   var query;
   $('#txtArtistSearch').keypress('click',function(e){
     if( e.which == 13 ){
-        e.preventDefault();
-        var query = $('#txtArtistSearch').val();
-        if( query.length > 2 ){
+      e.preventDefault();
+      var query = $('#txtArtistSearch').val();
+      if( query.length > 2 ){
+        //styling
+        $('#content').height('16%');
+        $('.container').addClass('height');
+        $('.background-group').fadeOut();
 
-          searchArtists(query);
-          getYoutubeSearch(query);
-          autocomplete(query);
-        }
+        searchArtists(query);
+        getYoutubeSearch(query);
+        autocomplete(query);
+      }
     }
   });
 
@@ -90,17 +94,6 @@
         picDiv.attr('height', 'auto');
         picDiv.attr('width', '50%');
 
-           //artist pic works well 
-        // var artistPic = artists[0].images[0].url;
-        // console.log('artistPic', artistPic);
-        // var picDiv = document.getElementById('artist-picture');
-        // var imgTag = document.createElement('img');
-        // imgTag.setAttribute('src', artistPic);
-        // imgTag.setAttribute('height', 'auto');
-        // imgTag.setAttribute('width', '50%');
-        // console.log('imgTag', imgTag);
-        // picDiv.appendChild(imgTag);
-
         top25Tracks(artistID);
         getArtistBio(artistID);
         // $searchResults.html(result); 
@@ -133,12 +126,27 @@
     var tracks = relatedArtists.tracks;
     console.log('relatedArtists', relatedArtists);
     var tracksResult = ''; 
+
     for (var i = 0; i < tracks.length; i++){
       var trackName = tracks[i].name; 
-      var durationMs = tracks[i].duration_ms;
       var previewUrl = tracks[i].preview_url;
+      var durationMs = tracks[i].duration_ms;
+      var formatDurationMins;
 
-      tracksResult += '<td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+durationMs+'">'+durationMs+'</a></td><td><a class="artist" data-selected-index="'+i+'" href="'+previewUrl+'">'+previewUrl+'</a></td>';
+      function msToMin(durationMs){
+        var durationSecs = Math.round(durationMs/1000);
+        var durationMins = Math.floor(durationSecs/60); 
+        formatDurationMins = durationMins + ":" + durationSecs%60;
+        console.log('formatDurationMins...', formatDurationMins);
+        if(formatDurationMins.length == 3){ //if song is 
+          formatDurationMins = durationMins + ":0" + durationSecs%60;
+        }
+        return formatDurationMins;
+      }
+
+      msToMin(durationMs);
+
+      tracksResult += '<tr><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+formatDurationMins+'">'+formatDurationMins+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+previewUrl+'">'+previewUrl+'</a></td></tr>';
     }
     $top25Tracks.html(tracksResult); 
   } 
@@ -168,12 +176,17 @@
       api_key: api_key,
       id: query
     };
-    return $.ajax({
+    $.ajax({
       url: url,
       type: 'GET',
       dataType: 'json',
       success: function(response){
+        console.log('get artist bio success entered....', url);
+      }, 
+      error: function(response){
+        console.log('');
       }
+      //last here
     })
       .pipe(renderBio)
   }
@@ -182,6 +195,7 @@
     var bioText;
     for (var i=0; i<relatedArtists.response.biographies.length; i++){
       if(relatedArtists.response.biographies[i].text.length > 100){
+        console.log('in render bio if function...');
         bioText = relatedArtists.response.biographies[i].text;
         break;
       }
@@ -217,10 +231,10 @@
 
       var youtubeEmbedBase = "http://www.youtube.com/embed/";
 
-    var srcLink = youtubeEmbedBase+videoID;
-    ifrm.setAttribute('src', srcLink);
-    ifrm.setAttribute('width', '33%');
-    ifrm.setAttribute('height', '200px');
+      var srcLink = youtubeEmbedBase+videoID;
+      ifrm.setAttribute('src', srcLink);
+      ifrm.setAttribute('width', '33%');
+      ifrm.setAttribute('height', '200px');
     }
   }
 
