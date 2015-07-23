@@ -65,6 +65,11 @@ body {
 
 }
 
+.wrapper {
+  width: 70%;
+  margin:0 auto;
+}
+
 .row {
     margin-bottom: 0;
 }
@@ -156,8 +161,19 @@ main {
 
 .second-group-img img{
   right: 0;
+  display: none;
 
 }
+
+.third-group-img {
+  bottom: 0;
+}
+
+.bg {
+  position: absolute;
+  background: url(../images/kanye-west1.jpg) no-repeat center;
+  background-size: cover;
+  }
 
 img.one-blue{
   right: 165px;
@@ -207,6 +223,14 @@ img.three-blue {
      transform: translate(135px, 0px);
   }
 }
+
+
+.three-orange {
+  bottom: -167px;
+  left: -140px;
+}
+
+
 
 form {
     z-index: 3;
@@ -261,6 +285,12 @@ form {
     height: 300px;
 }
 
+.songs div.card {
+  height: 95%;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
 .card a {
     margin-top: 25px;
     padding: 0 14px;
@@ -280,12 +310,55 @@ table tbody tr td:first-child {
     color: grey;
 }
 
+tr:hover > td, tr{
+  color:black;
+  cursor: pointer;
+}
 
+.container {
+  overflow: hidden;
+  height: 0;
+}
 
-
+.height{
+  height: 70%;
+  transition: height 1s ease;
+}
 
 .reveal {
     opacity: 1;
+}
+
+
+.zoom { 
+z-index: 10;
+    -webkit-transition: all 5s ease; 
+    -moz-transition: all 5s  ease; 
+    -o-transition: all 5s  ease; 
+    transition: all 5s ease; 
+-webkit-backface-visibility: hidden;
+-webkit-perspective: 1000;
+}
+
+.zoom:hover { 
+    -moz-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2);
+    -ms-transform: scale(1.2);
+filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand',
+    M11=2, M12=-0, M21=0, M22=2);
+  
+}
+
+
+@media only screen and (max-width: 600px) {
+  
+  .logo {
+    display: block;
+    margin: 0 auto;
+  }
+
 }
 
 /* ==========================================================================
@@ -367,6 +440,9 @@ table tbody tr td:first-child {
    These examples override the primary ('mobile first') styles.
    Modify as content requires.
    ========================================================================== */
+
+
+
 
 @media only screen and (min-width: 35em) {
     /* Style adjustments for viewports that meet the condition */
