@@ -29,6 +29,14 @@
         var query = $('#txtArtistSearch').val();
         if( query.length > 2 ){
 
+
+
+          $('#content').height('16%');
+          $('.container').addClass('height');
+          $('.background-group').fadeOut(800);
+        
+
+
           searchArtists(query);
           getYoutubeSearch(query);
           autocomplete(query);
