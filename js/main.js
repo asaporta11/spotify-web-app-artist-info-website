@@ -305,8 +305,11 @@ function autocomplete(query){
 //   });
 // });
 
-var toggleHeight = ".container .card .card-content .btn-toggle"
 
 $( "#readmore-btn" ).click(function() {
-  $( ".card .card-content p" ).toggleClass( toggleHeight );
+
+  $(".card .card-content p").toggle($('.card .card-content p').css('height', '150px'));
+      
+
 });
+
