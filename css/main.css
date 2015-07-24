@@ -368,6 +368,7 @@ form {
 td, th {
     padding: 15px 5px;
     color: white;
+    width: 325px;
 }
 
 .album {
