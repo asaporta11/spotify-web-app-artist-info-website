@@ -35,6 +35,9 @@
         $('.background-group').fadeOut();
 
         searchArtists(query);
+        $('.songs').css('display', 'block');
+        $('.interviews').css('display', 'block');
+        $('#readmore-btn').css('display', 'block');
         // getYoutubeSearch(artistName);
         // works:
         // getYoutubeSearch(query);
@@ -67,85 +70,7 @@
     $('#hiddenrow').removeClass('animated bounceInDown').addClass('hidden'); 
   });
 
-  // function searchArtists(query) {
-  //   // console.log('search artists entered...');
-  //   // console.log('query in search artists: ', query);
-  //   var url = 'https://api.spotify.com/v1/search?q='+query+'&type=artist&market=US';
-  //   return $.ajax({
-  //     url: url,
-  //     type: 'GET',
-  //     dataType: 'json',
-  //     success: function(data){
-  //       // console.log('search artists success!');
-  //       // console.log(data);
-  //       var artists = data.artists.items; //object of top 10 artists related to query name
-
-  //       //artist name
-  //       var artistName = artists[0].name;
-  //       document.getElementById('artist-name').innerHTML=artistName;
-
-  //       var artistID = artists[0].id;
-      
-  //       //artist pic
-  //       var artistPic = artists[0].images[0].url;
-  //       // console.log('artistPic', artistPic);
-  //       var picDiv = $('#artist-picture-test');
-  //       picDiv.attr('src', artistPic);
-  //       picDiv.attr('height', 'auto');
-  //       picDiv.attr('width', '50%');
-
-  //       top25Tracks(artistID);
-  //       getArtistBio(artistID);
-  //       // $searchResults.html(result); 
-  //     }
-  //   })      
-  //     .pipe(renderSearchResults);
-  // }
-    
-  //// CONSOLE LOG ERROR HANDLE WORKS HERE (kind of?)
-  //   function searchArtists(query) {
-  //   console.log('search artists entered...');
-  //   // console.log('query in search artists: ', query);
-  //   var url = 'https://api.spotify.com/v1/search?q='+query+'&type=artist&market=US';
-  //   $.ajax({
-  //     url: url,
-  //     type: 'GET',
-  //     dataType: 'json',
-  //     success: function(data){
-  //       // console.log('search artists success!');
-  //       // console.log(data);
-  //       var artists = data.artists.items; //object of top 10 artists related to query name
-
-  //       // if(typeof artists[0].name === 'undefined'){
-  //       //   console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
-  //       // }else{
-
-  //       if(artists[0].name){
-  //         console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
-  //       }else{
-  //         //artist name
-  //         var artistName = artists[0].name;
-  //         document.getElementById('artist-name').innerHTML=artistName;
-
-  //         var artistID = artists[0].id;
-        
-  //         //artist pic
-  //         var artistPic = artists[0].images[0].url;
-  //         // console.log('artistPic', artistPic);
-  //         var picDiv = $('#artist-picture-test');
-  //         picDiv.attr('src', artistPic);
-  //         picDiv.attr('height', 'auto');
-  //         picDiv.attr('width', '50%');
-
-  //         top25Tracks(artistID);
-  //         getArtistBio(artistID);
-  //         // $searchResults.html(result);
-  //       }
-  //     }
-  //   })      
-  //     .pipe(renderSearchResults);
-  // }
-
+  
   function searchArtists(query) {
     console.log('search artists entered...');
     // console.log('query in search artists: ', query);
@@ -163,7 +88,10 @@
           console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
           var searchErrorMessage = "Oh no! We don't have that artist in our records. Please try another one!";
           $('#artist-name').text(searchErrorMessage);
-          // $('.container .songs').attr('height', 0);
+          $('.songs').css('display', 'none');
+          $('.interviews').css('display', 'none');
+          $('#readmore-btn').css('display', 'none');
+          
         }else{
           artistName = artists[0].name;
           document.getElementById('artist-name').innerHTML=artistName;
