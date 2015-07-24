@@ -100,10 +100,52 @@
   //     .pipe(renderSearchResults);
   // }
     
-  
+  //// CONSOLE LOG ERROR HANDLE WORKS HERE (kind of?)
+  //   function searchArtists(query) {
+  //   console.log('search artists entered...');
+  //   // console.log('query in search artists: ', query);
+  //   var url = 'https://api.spotify.com/v1/search?q='+query+'&type=artist&market=US';
+  //   $.ajax({
+  //     url: url,
+  //     type: 'GET',
+  //     dataType: 'json',
+  //     success: function(data){
+  //       // console.log('search artists success!');
+  //       // console.log(data);
+  //       var artists = data.artists.items; //object of top 10 artists related to query name
+
+  //       // if(typeof artists[0].name === 'undefined'){
+  //       //   console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
+  //       // }else{
+
+  //       if(artists[0].name){
+  //         console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
+  //       }else{
+  //         //artist name
+  //         var artistName = artists[0].name;
+  //         document.getElementById('artist-name').innerHTML=artistName;
+
+  //         var artistID = artists[0].id;
+        
+  //         //artist pic
+  //         var artistPic = artists[0].images[0].url;
+  //         // console.log('artistPic', artistPic);
+  //         var picDiv = $('#artist-picture-test');
+  //         picDiv.attr('src', artistPic);
+  //         picDiv.attr('height', 'auto');
+  //         picDiv.attr('width', '50%');
+
+  //         top25Tracks(artistID);
+  //         getArtistBio(artistID);
+  //         // $searchResults.html(result);
+  //       }
+  //     }
+  //   })      
+  //     .pipe(renderSearchResults);
+  // }
 
   function searchArtists(query) {
-    // console.log('search artists entered...');
+    console.log('search artists entered...');
     // console.log('query in search artists: ', query);
     var url = 'https://api.spotify.com/v1/search?q='+query+'&type=artist&market=US';
     $.ajax({
@@ -111,17 +153,15 @@
       type: 'GET',
       dataType: 'json',
       success: function(data){
-        // console.log('search artists success!');
-        // console.log(data);
+        console.log('search artists success entered!');
+        console.log('search artists data success:', data);
         var artists = data.artists.items; //object of top 10 artists related to query name
 
         // if(typeof artists[0].name === 'undefined'){
         //   console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
         // }else{
-
-        if(!artists[0].name){
-          console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
-        }else{
+        console.log('artists[0].name before if:', artists[0].name);
+        if(artists[0].name){
           //artist name
           var artistName = artists[0].name;
           document.getElementById('artist-name').innerHTML=artistName;
@@ -133,12 +173,14 @@
           // console.log('artistPic', artistPic);
           var picDiv = $('#artist-picture-test');
           picDiv.attr('src', artistPic);
-          picDiv.attr('height', 'auto');
-          picDiv.attr('width', '50%');
+          // picDiv.attr('height', 'auto');
+          // picDiv.attr('width', '50%');
 
           top25Tracks(artistID);
           getArtistBio(artistID);
           // $searchResults.html(result);
+        }else{
+          console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
         }
       }
     })      
@@ -270,10 +312,8 @@
 
 function onYouTubeIframeAPIReady(response) {
   if($('#player-container').find('iframe')){
-      console.log('entered YOUTUBE if player container empty!');
       $('#player-container').empty();
   }else{
-      console.log('entered YOUTUBE player container ELSE!');
   } 
 
   for(i=0; i<3; i++){
@@ -283,14 +323,13 @@ function onYouTubeIframeAPIReady(response) {
 
     var ifrm = document.createElement('iframe');
     ifrm.setAttribute('id', 'player'+i);
+    ifrm.setAttribute('frameborder', 0);
+    ifrm.setAttribute('allowfullscreen', '');
     document.getElementById('player-container').appendChild(ifrm);
 
     var youtubeEmbedBase = "http://www.youtube.com/embed/";
-
     var srcLink = youtubeEmbedBase+videoID;
     ifrm.setAttribute('src', srcLink);
-    // ifrm.setAttribute('width', '33%');
-    // ifrm.setAttribute('height', '200px');
   }
 }
 
@@ -312,13 +351,15 @@ function onYouTubeIframeAPIReady(response) {
     player.stopVideo();
   }
 
-
-//Autocomplete for suggested artists 
-// http://developer.echonest.com/docs/v4/artist.html#suggest-beta
+//     AUTO COMPLETE
+var totalAutocompleteArray = [];
+//from jQuery UI autocomplete
+$( "#txtArtistSearch" ).autocomplete({
+  source: totalAutocompleteArray
+});
 
 function autocompleteLookUp(query){
   // console.log('autocomplete query ', query);
-  var totalAutocompleteArray = [];
   var autocompleteArray = [];
   var url = "http://developer.echonest.com/api/v4/artist/suggest?api_key="+api_key+"&name="+query+"&results=5";
   $.ajax({
@@ -329,10 +370,6 @@ function autocompleteLookUp(query){
         var autocompleteList = response.response.artists[i].name;
         totalAutocompleteArray = autocompleteArray.push(autocompleteList);
       }
-    //from jQuery UI autocomplete
-    $( "#txtArtistSearch" ).autocomplete({
-      source: totalAutocompleteArray
-    });
     }
   });
 }
@@ -356,15 +393,20 @@ function autocompleteLookUp(query){
 //   });
 // });
 
-var toggleHeight = ".container .card .card-content .btn-toggle"
 
-$( "#readmore-btn" ).click(function() {
-  $( ".card .card-content p" ).toggleClass( toggleHeight );
-});
+// $( "#readmore-btn" ).click(function() {
+//   $( ".card .card-content p" ).toggleClass( toggleHeight );
+// });
 
-// //play link 
-// $('#play-preview').on("click", function(){
-//   console.log('handler for play preview called');
+// // //play link 
+// // $('#play-preview').on("click", function(){
+// //   console.log('handler for play preview called');
+// // });
+
+
+//   $(".card .card-content p").toggle($('.card .card-content p').css('height', '150px'));
+      
+
 // });
 
 
