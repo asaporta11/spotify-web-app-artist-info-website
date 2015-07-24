@@ -38,6 +38,7 @@
         $('.songs').css('display', 'block');
         $('.interviews').css('display', 'block');
         $('#readmore-btn').css('display', 'block');
+        $('#artist-picture-test').attr('src', 'images/opps.jpg');
         // getYoutubeSearch(artistName);
         // works:
         // getYoutubeSearch(query);
@@ -91,7 +92,7 @@
           $('.songs').css('display', 'none');
           $('.interviews').css('display', 'none');
           $('#readmore-btn').css('display', 'none');
-          
+
         }else{
           artistName = artists[0].name;
           document.getElementById('artist-name').innerHTML=artistName;
@@ -318,28 +319,5 @@ $('#txtArtistSearch').on('input', function() {
       $('.background-group').addClass('reveal');
     });
 
-//   $( "#readmore-btn" ).click(function() {
-//   $( ".card .card-content p" ).animate({
-//     height: "toggle"
-//   }, 800, function() {
-//     // Animation complete.
-//   });
-// });
-
-
-// $( "#readmore-btn" ).click(function() {
-//   $( ".card .card-content p" ).toggleClass( toggleHeight );
-// });
-
-// // //play link 
-// // $('#play-preview').on("click", function(){
-// //   console.log('handler for play preview called');
-// // });
-
-
-//   $(".card .card-content p").toggle($('.card .card-content p').css('height', '150px'));
-      
-
-// });
 
 
