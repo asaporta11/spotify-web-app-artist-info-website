@@ -20,8 +20,9 @@
   var previewUrl;
   var durationMsResult;
   var previewUrlResult;
+  var artistName;
+  var totalAutocompleteArray = [];
 
-  
   var query;
   $('#txtArtistSearch').keypress('click',function(e){
     if( e.which == 13 ){
@@ -34,8 +35,9 @@
         $('.background-group').fadeOut();
 
         searchArtists(query);
-        getYoutubeSearch(query);
-        autocompleteLookUp(query);
+        // getYoutubeSearch(artistName);
+        // works:
+        // getYoutubeSearch(query);
       }
     }
   });
@@ -157,20 +159,19 @@
         console.log('search artists data success:', data);
         var artists = data.artists.items; //object of top 10 artists related to query name
 
-        // if(typeof artists[0].name === 'undefined'){
-        //   console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
-        // }else{
-        console.log('artists[0].name before if:', artists[0].name);
-        if(artists[0].name){
-          //artist name
-          var artistName = artists[0].name;
+        if(artists.length === 0){
+          console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
+          var searchErrorMessage = "Oh no! We don't have that artist in our records. Please try another one!";
+          $('#artist-name').text(searchErrorMessage);
+          // $('.container .songs').attr('height', 0);
+        }else{
+          artistName = artists[0].name;
           document.getElementById('artist-name').innerHTML=artistName;
+          console.log('artist name in searchArtists ',artistName);
 
           var artistID = artists[0].id;
-        
-          //artist pic
+
           var artistPic = artists[0].images[0].url;
-          // console.log('artistPic', artistPic);
           var picDiv = $('#artist-picture-test');
           picDiv.attr('src', artistPic);
           // picDiv.attr('height', 'auto');
@@ -178,13 +179,12 @@
 
           top25Tracks(artistID);
           getArtistBio(artistID);
-          // $searchResults.html(result);
-        }else{
-          console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
+          getYoutubeSearch(artistName);
         }
       }
     })      
       .pipe(renderSearchResults);
+      // .pipe(getYoutubeSearch);
   }
   
   function renderSearchResults(response) {
@@ -297,6 +297,8 @@
   } 
 
   function getYoutubeSearch (query){
+    console.log('getYoutubeSearch query: ', query);
+    console.log('getYoutubeSearch artistName: ', artistName);
     var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+query+'%20%20interview&key='+youtube_api_key;
     //add a bit of code that limits search results to 3 or 5
     return $.ajax({
@@ -351,12 +353,6 @@ function onYouTubeIframeAPIReady(response) {
     player.stopVideo();
   }
 
-//     AUTO COMPLETE
-var totalAutocompleteArray = [];
-//from jQuery UI autocomplete
-$( "#txtArtistSearch" ).autocomplete({
-  source: totalAutocompleteArray
-});
 
 function autocompleteLookUp(query){
   // console.log('autocomplete query ', query);
@@ -368,12 +364,21 @@ function autocompleteLookUp(query){
     success: function(response){
       for(i=0; i<response.response.artists.length; i++){
         var autocompleteList = response.response.artists[i].name;
-        totalAutocompleteArray = autocompleteArray.push(autocompleteList);
+        autocompleteArray.push(autocompleteList);
       }
+      totalAutocompleteArray = autocompleteArray;
+      //     AUTO COMPLETE
+      //from jQuery UI autocomplete
+      $( "#txtArtistSearch" ).autocomplete({
+        source: totalAutocompleteArray
+      });
     }
   });
 }
 
+$('#txtArtistSearch').on('input', function() {
+    autocompleteLookUp($(this).val());
+});
 // ========== Abe's Stuff ======================================================================
 
 
