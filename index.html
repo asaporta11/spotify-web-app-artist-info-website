@@ -12,10 +12,10 @@
         <!-- <link rel="stylesheet" href="css/normalize.css"> -->
         <link rel="stylesheet" href="css/main.css">
         <script src="js/jquery.min.js"></script>
-        <script src="vendors/jquery-ui-1.11.4.custom/jquery-ui.min.css"></script>
+        <link rel="stylesheet" href="vendors/jquery-ui-1.11.4.custom/jquery-ui.css">
         <script src="vendors/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
-        <script src="vendors/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css"></script>
-        <script src="vendors/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css"></script>
+        <link rel="stylesheet" href="vendors/jquery-ui-1.11.4.custom/jquery-ui.structure.css">
+        <link rel="stylesheet" href="vendors/jquery-ui-1.11.4.custom/jquery-ui.theme.css">
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -28,16 +28,16 @@
                 
             <header class="nav-wrapper">
                 <div class="wrapper">
-                <a href="#!" class="brand-logo"><img class="logo"src="images/logo.svg"></a>
+                <a href="#" class="brand-logo"><img class="logo"src="images/logo.svg"></a>
                 </div>
                 
             </header>
 
             <div id="content"class="container">
                 <div class="row">
-                    <form class="valign-wrapper offset-s1 col s9 m12 l12">
+                    <form class="valign-wrapper offset-s1 col s9 m12 l12" autocomplete="off">
                         <div class="input-field col s12 m6 l4">
-                          <input id="txtArtistSearch" type="text" class="validate">
+                          <input id="txtArtistSearch" type="text" class="white-text validate">
                           <label for="txtArtistSearch">Artist Name</label>
                         </div>
                     </form>
@@ -81,6 +81,18 @@
                         </li>
                     </ul>
 
+                    <ul class="forth-group-img">
+                        <li>
+                            <img class="one-purple" src="images/background-purple.png" alt="">
+                        </li>
+                        <li>
+                            <img class="two-purple" src="images/bruno.png" alt="">
+                        </li>
+                        <li>
+                            <img class="three-purple" src="images/foreground-purple.png" alt="">
+                        </li>
+                    </ul>
+
                 </div>
       <!--       
  $('#content').height('16%');
@@ -104,22 +116,29 @@
                             </div>
                             <div class="card-content white">
                                 <h1 id="artist-name" class="card-title activator blue-grey-text text-darken-4"></h1>
-                                <p id="bioText" class="grey-text truncate text-darken-4"></p>
-                                <a id="readmore-btn"class="white-text blue-grey waves-effect waves-light btn">Read More</a>
+                                <div id="bioText" class="grey-text truncate text-darken-4"></div>
+                                    <a id="readmore-btn"class=" white-text blue-grey waves-effect waves-light btn">Read More</a>
                             </div>
                         </div>
                     </div>
+                    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                        <a id="return-to-top"class="btn-floating btn-large">
+                          <i class="large material-icons">search</i>
+                        </a>
+                    </div>
                 </div>
             </section>
-                        
+
             <!-- Below is the top songs list -->
 
             <section class="container songs">
                 <div class="card  z-depth-5 blue-grey darken-4">
                     <div class="card-content">
                     <h2 class="card-title">Top Songs</h2>
+                    <div class="collapse-container">
                         <table class="hoverable">
                             <thead>
+
                                 <tr>
                                     <th data-field="id">Songs</th>
                                     <th data-field="name"><i class="tiny material-icons">query_builder</i></th>
@@ -130,9 +149,11 @@
                             <tbody id="top25Tracks">
                                 
                             </tbody>
+                            </div>
                         </table>
-                    <a class="white-text blue-grey waves-effect waves-light btn">More Songs</a>
-                    </div>
+                        </div>
+                    <a id="btn-song" class="white-text blue-grey waves-effect waves-light btn">More Songs</a>
+                    
                 </div>
                 
             </section>
@@ -146,9 +167,8 @@
                         <div class="card-content">
                             <h2 class="card-title blue-grey-text text-darken-4">Artist Interviews</h2>
                             <div class="row">
-                                    <div class="col s12 m4 l4">
-                                        <div id="player-container" class="video-container no-controls">
-                                        </div>
+                                    <div id="player-container" class="col s12 no-controls">
+                                        
                                     
                                     </div>
                                 
@@ -192,13 +212,13 @@
         </main>
 
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
         <!-- <script src="js/plugins.js"></script>
         // <script src="js/vendor/modernizr-2.8.3.min.js"></script> -->
         <script src="js/materialize.min.js"></script>
         <script src="js/main.js"></script>
-        
+        <script src="js/script.js"></script>
 
     </body>
 </html>
