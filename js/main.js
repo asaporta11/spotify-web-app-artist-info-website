@@ -38,7 +38,8 @@
         $('.songs').css('display', 'block');
         $('.interviews').css('display', 'block');
         $('#readmore-btn').css('display', 'block');
-        $('#artist-picture-test').attr('src', 'images/opps.jpg');
+        $('.artistBio').css('display', 'block');
+        
         // getYoutubeSearch(artistName);
         // works:
         // getYoutubeSearch(query);
@@ -92,6 +93,8 @@
           $('.songs').css('display', 'none');
           $('.interviews').css('display', 'none');
           $('#readmore-btn').css('display', 'none');
+          $('#artist-picture-test').attr('src', 'images/opps.jpg');
+          $('.artistBio').css('display', 'none');
 
         }else{
           artistName = artists[0].name;
