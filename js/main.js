@@ -1,148 +1,103 @@
+var SEARCH_BASE_URL = 'https://api.spotify.com/v1/';
+var TRACKS_BASE_URL = 'https://api.spotify.com/v1/artists/{id}/top-tracks';
+var YOUTUBE_SEARCH_BASE_URL = 'https://www.googleapis.com/youtube/v3/search?part=';
+var SEARCH_LIMIT = 5;
+// var RELATED_LIMIT = 6;
+var api_key = "WJR9NGGDMNXGWXXAW";
+var youtube_api_key = "AIzaSyDJ2uOGMzzshx3VCZQ3bxI0wz-E4STB3bU";
 
-  var SEARCH_BASE_URL = 'https://api.spotify.com/v1/';
-  var TRACKS_BASE_URL = 'https://api.spotify.com/v1/artists/{id}/top-tracks';
-  var YOUTUBE_SEARCH_BASE_URL = 'https://www.googleapis.com/youtube/v3/search?part=';
-  var SEARCH_LIMIT = 5;
-  var RELATED_LIMIT = 6;
-  var api_key = "WJR9NGGDMNXGWXXAW";
-  var youtube_api_key = "AIzaSyDJ2uOGMzzshx3VCZQ3bxI0wz-E4STB3bU";
-  var $ajaxlog = $('#ajaxlog');  
-  var $searchResults = $('#searchresults');
-  var $top25Tracks = $('#top25Tracks');
-  var $selectedArtistTemplate = $('#selectedartisttemplate');
-  var $relatedArtistTemplate = $('#relatedartisttemplate');
-  var $spotifyResults = $('#spotifyresults');  
-  var searchResultData = {};
-  var $bioText = $('#bioText');
-  var $videoDisplay = $('#videoDisplay');
-  var videoID;
-  var durationMs;
-  var previewUrl;
-  var durationMsResult;
-  var previewUrlResult;
-  var artistName;
-  var totalAutocompleteArray = [];
 
-  var query;
-  $('#txtArtistSearch').keypress('click',function(e){
-    if( e.which == 13 ){
-      e.preventDefault();
-      var query = $('#txtArtistSearch').val();
-      if( query.length > 2 ){
-        //styling
-        $('#content').height('16%');
-        $('.container').addClass('height');
-        $('.background-group').fadeOut();
+// EVENTS ------------------------------------------------------------------------------------
 
-        searchArtists(query);
-        $('.songs').css('display', 'block');
-        $('.interviews').css('display', 'block');
-        $('#readmore-btn').css('display', 'block');
-        $('.artistBio').css('display', 'block');
-        
-        // getYoutubeSearch(artistName);
-        // works:
-        // getYoutubeSearch(query);
-      }
+// ========== Abe's Stuff ====================================================================
+// Below is the parallax function for img card 
+$(document).ready(function(){
+    $('.parallax').parallax();
+    // revealing the background images
+    $('.background-group').addClass('reveal');
+});
+// ===========================================================================================
+
+$('#txtArtistSearch').keydown(function (e) {
+  var query = $('#txtArtistSearch').val();
+
+  if (e.which != 13) return;
+
+  e.preventDefault();
+
+  if (query.length > 2) {
+    //styling
+    $('#content').height('16%');
+    $('.container').addClass('height');
+    $('.background-group').fadeOut();
+
+    searchArtists(query);
+    $('.songs, .interviews, #readmore-btn, .artistBio').css('display', 'block');
+  }
+});
+
+//Autocomplete 
+$('body').on('click', '.artist', function(e) {
+  e.preventDefault();
+
+  // selectedIndex = $(this).attr('data-selected-index'); //by selecting artist in list assigns an index # to whichever one you chose
+  selectedID = $(this).attr('href'); //get the href of the a tag embedded in the li which is the artist ID (i think)
+
+  renderArtistBio(selectedID);
+  top25Tracks(selectedID);
+
+  $('#searchcard').addClass('hidden');
+  $('#hiddenrow').removeClass('hidden').addClass('animated bounceInDown');
+});
+
+//Search again button 
+$('body').on('click', '#searchagainbutton', function(e) {
+  $('#searchcard').removeClass('hidden').addClass('animated bounceInDown');
+  $('#hiddenrow').removeClass('animated bounceInDown').addClass('hidden'); 
+});
+
+$('#txtArtistSearch').on('input', function() {
+    autocompleteLookUp($(this).val());
+});
+
+
+// API ---------------------------------------------------------------------------------------
+
+function searchArtists(query) {
+  // console.log('search artists entered...');
+  var url = 'https://api.spotify.com/v1/search?q=' + query + '&type=artist&market=US';
+  $.get(url, function(data) {
+    // console.log('search artists success entered!');
+    // console.log('search artists data success:', data);
+    var artists = data.artists.items; //object of top 10 artists related to query name
+
+    if (artists.length === 0) {
+      $('#artist-name').text("Oh no! We don't have that artist in our records. Please try another one!");
+      $('.songs, .interviews, #readmore-btn, .artistBio').css('display', 'none');
+      $('#artist-picture-test').attr('src', 'images/opps.jpg');
+
+    } else {
+      var artistName = artists[0].name;
+      $('#artist-name').html(artistName);
+
+      var artistID = artists[0].id;
+      var artistPic = artists[0].images[0].url;
+      var picDiv = $('#artist-picture-test');
+      picDiv.attr('src', artistPic);
+
+      top25Tracks(artistID);
+      renderArtistBio(artistID);
+      renderYoutubeSearch(artistName);
     }
   });
+}
 
-  $('body').on('click', '.artist', function(e) {
-    e.preventDefault();
-    selectedIndex = $(this).attr('data-selected-index'); //by selecting artist in list assigns an index # to whichever one you chose
-    selectedID = $(this).attr('href'); //get the href of the a tag embedded in the li which is the artist ID (i think)
-    // console.log("searchResultData "+searchResultData.artists);
-    // selectedArtistData = searchResultData.artists.items[selectedIndex];
+function top25Tracks (artistID) {
+  var url = "https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US";
 
-    //draws everything on page
-    // var $renderedTemplate = $selectedArtistTemplate.tmpl(selectedArtistData);
-    // $spotifyResults.html($renderedTemplate);
-
-    //what I need 
-    top25Tracks(selectedID);
-    getArtistBio(selectedID);
-
-    $('#searchcard').addClass('hidden');
-    $('#hiddenrow').removeClass('hidden').addClass('animated bounceInDown');
-  });
-  
-  
-  $('body').on('click', '#searchagainbutton', function(e) {
-    $('#searchcard').removeClass('hidden').addClass('animated bounceInDown');
-    $('#hiddenrow').removeClass('animated bounceInDown').addClass('hidden'); 
-  });
-
-  
-  function searchArtists(query) {
-    console.log('search artists entered...');
-    // console.log('query in search artists: ', query);
-    var url = 'https://api.spotify.com/v1/search?q='+query+'&type=artist&market=US';
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      success: function(data){
-        console.log('search artists success entered!');
-        console.log('search artists data success:', data);
-        var artists = data.artists.items; //object of top 10 artists related to query name
-
-        if(artists.length === 0){
-          console.log("Oh no! We don't have that artist in our records. Please try another one!"); 
-          var searchErrorMessage = "Oh no! We don't have that artist in our records. Please try another one!";
-          $('#artist-name').text(searchErrorMessage);
-          $('.songs').css('display', 'none');
-          $('.interviews').css('display', 'none');
-          $('#readmore-btn').css('display', 'none');
-          $('#artist-picture-test').attr('src', 'images/opps.jpg');
-          $('.artistBio').css('display', 'none');
-
-        }else{
-          artistName = artists[0].name;
-          document.getElementById('artist-name').innerHTML=artistName;
-          console.log('artist name in searchArtists ',artistName);
-
-          var artistID = artists[0].id;
-
-          var artistPic = artists[0].images[0].url;
-          var picDiv = $('#artist-picture-test');
-          picDiv.attr('src', artistPic);
-          // picDiv.attr('height', 'auto');
-          // picDiv.attr('width', '50%');
-
-          top25Tracks(artistID);
-          getArtistBio(artistID);
-          getYoutubeSearch(artistName);
-        }
-      }
-    })      
-      .pipe(renderSearchResults);
-      // .pipe(getYoutubeSearch);
-  }
-  
-  function renderSearchResults(response) {
-    // console.log('render search results entered');
-    // console.log('response:', response);
-    searchResultData = response;
-    var artists = response.artists.items;
-    var result = '';
-    // for (var i = 0; i < artists.length; i++) {
-    //   var artistName = artists[i].name;
-    //   var artistID = artists[i].id;
-    //   result += '<li><a class="artist" data-selected-index="'+i+'" data-artist-name="'+artistName+'" href="'+artistID+'">'+artistName+'</a></li>';
-    // }
-    $searchResults.html(result);
-  }
-  
-
-  function getArtistId(artistID) {
-    return $.get(SEARCH_BASE_URL+'artists/'+artistID) //artist object 
-      .pipe(top25Tracks);
-  }
-
-  function renderRelatedTemplate(relatedArtists) {
+  $.get(url, function (relatedArtists) {
     var tracks = relatedArtists.tracks;
-    console.log('relatedArtists', relatedArtists);
-    var tracksResult = ''; 
+    var tracksResult = '';
 
     for (var i = 0; i < tracks.length; i++){
       var trackName = tracks[i].name; 
@@ -150,177 +105,82 @@
       var durationMs = tracks[i].duration_ms;
       var formatDurationMins;
 
-      function msToMin(durationMs){
-        var durationSecs = Math.round(durationMs/1000);
-        var durationMins = Math.floor(durationSecs/60); 
-        formatDurationMins = durationMins + ":" + durationSecs%60;
-        // console.log('formatDurationMins...', formatDurationMins);
-        if(formatDurationMins.length == 3){ //if song is 3:06 then puts an 0 before the 6
-          formatDurationMins = durationMins + ":0" + durationSecs%60;
-        }
-        return formatDurationMins;
+      var durationSecs = Math.round(durationMs/1000);
+      var durationMins = Math.floor(durationSecs/60); 
+      formatDurationMins = durationMins + ":" + durationSecs%60;
+
+      //if song is 3:06 then puts an 0 before the 6
+      if (formatDurationMins.length == 3) {
+        formatDurationMins = durationMins + ":0" + durationSecs%60;
       }
 
-      msToMin(durationMs);
-
-      // tracksResult += '<tr id="play-preview"><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+formatDurationMins+'">'+formatDurationMins+'</a></td><td><a class="artist" data-selected-index="'+i+'" href="'+previewUrl+'"><i class="material-icons">play_arrow</i></a></td></tr>';
-      tracksResult += '<tr id="play-preview"><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+trackName+'">'+trackName+'</a></td><td><a class="artist" data-selected-index="'+i+'" data-artist-name="'+formatDurationMins+'">'+formatDurationMins+'</a></td><td><audio controls><source src='+previewUrl+'></audio></td></tr>';
+      tracksResult +=
+        '<tr id="play-preview">' + 
+          '<td>' + 
+            '<a class="artist" data-selected-index="' + i + '" data-artist-name="' + trackName + '">' + 
+              trackName + 
+            '</a>' + 
+          '</td>' +
+          '<td>' +
+            '<a class="artist" data-selected-index="' + i + '" data-artist-name="' + formatDurationMins + '">' + 
+              formatDurationMins +
+            '</a>' +
+          '</td>' +
+          '<td>' +
+            '<audio controls><source src='+previewUrl+'></audio>' +
+          '</td>' +
+        '</tr>';
     }
-    $top25Tracks.html(tracksResult); 
-  } 
 
-  function top25Tracks (artistID) {
-    var url = "https://api.spotify.com/v1/artists/"+artistID+"/top-tracks?country=US";
-    return $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      success: function(data){
-        console.log('top 10 tracks success function entered!');
-        console.log('top10tracks data ', data);
-        // durationMs = data.durationMs[i].duration_ms
-        // previewUrl = data
-      }
-    })
-      .pipe(renderRelatedTemplate);
-  }
-
-  function getArtistBio(query) {
-    console.log('getArtistBio entered...');
-    // console.log("query: "+query);
-    // var echoNestId;
-    var url;
-    var url = "http://developer.echonest.com/api/v4/artist/biographies?api_key="+api_key+"&id=spotify:artist:"+query;
-    var bData = {
-      api_key: api_key,
-      id: query
-    };
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      success: function(response){
-        console.log('get artist bio success entered....', url);
-        console.log('response...', response);
-      }, 
-      error: function(response){
-        console.log('get artist bio ERROR...');
-      }
-    })
-      .pipe(renderBio)
-  }
-
-  function renderBio(relatedArtists) {
-    console.log('renderBio entered...');
-    var bioText;
-    var bioResult = ''; 
-    for (var i=0; i<relatedArtists.response.biographies.length; i++){
-      if(relatedArtists.response.biographies[i].text.length > 100){
-        bioText = relatedArtists.response.biographies[i].text;
-        bioResult = '<p class="artistBio">'+bioText+'</p>';
-        break;
-      }else{
-        console.log('else statement entered!');
-        bioResult = "<p>Oops - it looks like we don't have a bio for this artist! If you'd like to write one, please visit <a href=www.wikipedia.com>our friends at wikipedia</a></p>";
-        // $bioText.html(bioResult); 
-      }
-    }
-    $bioText.html(bioResult); 
-  } 
-
-  function getYoutubeSearch (query){
-    console.log('getYoutubeSearch query: ', query);
-    console.log('getYoutubeSearch artistName: ', artistName);
-    var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+query+'%20%20interview&key='+youtube_api_key;
-    //add a bit of code that limits search results to 3 or 5
-    return $.ajax({
-      url: url,
-      dataType: 'jsonp',
-      success: function(response){
-        // console.log('getYoutubeSearch ajax call worked!');
-        // console.log(response);
-      }
-    })
-       .pipe(onYouTubeIframeAPIReady);
-  }
-
-function onYouTubeIframeAPIReady(response) {
-  if($('#player-container').find('iframe')){
-      $('#player-container').empty();
-  }else{
-  } 
-
-  for(i=0; i<3; i++){
-    videoID = response.items[i].id.videoId;
-
-    var videoTitle = response.items[0].snippet.title;
-
-    var ifrm = document.createElement('iframe');
-    ifrm.setAttribute('id', 'player'+i);
-    ifrm.setAttribute('frameborder', 0);
-    ifrm.setAttribute('allowfullscreen', '');
-    document.getElementById('player-container').appendChild(ifrm);
-
-    var youtubeEmbedBase = "http://www.youtube.com/embed/";
-    var srcLink = youtubeEmbedBase+videoID;
-    ifrm.setAttribute('src', srcLink);
-  }
+    $('#top25Tracks').html(tracksResult);
+  });
 }
 
-  function onPlayerReady(event) {
-    event.target.setVolume(100);
-    event.target.playVideo();
-  }
-  var done = false;
-  function onPlayerStateChange(event) {
-    if (event.data == YT.PlayerState.PLAYING && !done) {
-      setTimeout(stopVideo, 6000);
-      done = true;
-    }
-  }
-  function onPlayerError() {
-    console.log('player error');
-  }
-  function stopVideo() {
-    player.stopVideo();
-  }
+function renderArtistBio(query) {
+  var url = "http://developer.echonest.com/api/v4/artist/biographies?api_key=" + api_key + "&id=spotify:artist:" + query;
+  $.get(url, function (relatedArtists, status, xhr) {
+    // to get status code -> xhr.status
+    for (var i=0; i<relatedArtists.response.biographies.length; i++){
+      if (relatedArtists.response.biographies[i].text.length > 100) {
+        var bioText = relatedArtists.response.biographies[i].text;
+        $('#bioText').html('<p class="artistBio">' + bioText + '</p>');
+        break;
 
-
-function autocompleteLookUp(query){
-  // console.log('autocomplete query ', query);
-  var autocompleteArray = [];
-  var url = "http://developer.echonest.com/api/v4/artist/suggest?api_key="+api_key+"&name="+query+"&results=5";
-  $.ajax({
-    url: url,
-    dataType: 'json',
-    success: function(response){
-      for(i=0; i<response.response.artists.length; i++){
-        var autocompleteList = response.response.artists[i].name;
-        autocompleteArray.push(autocompleteList);
+      } else {
+        $('#bioText').html("<p>Oops - it looks like we don't have a bio for this artist! If you'd like to write one, please visit <a href=www.wikipedia.com>our friends at wikipedia</a></p>");
       }
-      totalAutocompleteArray = autocompleteArray;
-      //     AUTO COMPLETE
-      //from jQuery UI autocomplete
-      $( "#txtArtistSearch" ).autocomplete({
-        source: totalAutocompleteArray
-      });
     }
   });
 }
 
-$('#txtArtistSearch').on('input', function() {
-    autocompleteLookUp($(this).val());
-});
-// ========== Abe's Stuff ======================================================================
+function autocompleteLookUp(query){
+  var url = "http://developer.echonest.com/api/v4/artist/suggest?api_key=" + api_key + "&name=" + query + "&results=5";
+  var autocompleteArray = [];
 
-
-
-// Below is the parallax function for img card 
-  $(document).ready(function(){
-      $('.parallax').parallax();
-      // revealing the background images
-      $('.background-group').addClass('reveal');
+  $.get(url, function(response){
+    for (i=0; i<response.response.artists.length; i++) {
+      autocompleteArray.push(response.response.artists[i].name);
+    }
+    // AUTO COMPLETE - from jQuery UI autocomplete
+    $( "#txtArtistSearch" ).autocomplete({
+      source: autocompleteArray
     });
+  });
+}
 
+// YOUTUBE -----------------------------------------------------------------------------------
 
+function renderYoutubeSearch (query){
+  // TODO: add a bit of code that limits search results to 3 or 5
+  var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + query + '%20%20interview&key='+ youtube_api_key;
+  $.get(url, function (response) {
+    if ($('#player-container').find('iframe')) {
+      $('#player-container').empty();
+    }
 
+    for (var i = 0; i < 3; i++) {
+      var srcLink = "http://www.youtube.com/embed/" + response.items[i].id.videoId;
+      $('#player-container').append('<iframe id="player' + i + ' frameborder="0" allowfullscreen src="' + srcLink + '"></iframe>');
+    }
+  });
+}
